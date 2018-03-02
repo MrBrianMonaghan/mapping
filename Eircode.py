@@ -1,5 +1,9 @@
-import mechanize
-import cookielib
+# -*- coding: utf-8 -*-
+
+# import mechanize
+# mechanize only works with Python 2.4, Python 2.5, Python 2.6, and Python 2.7.
+# alternatives - RoboBrowser, MechanicalSoup
+import http.cookiejar
 from bs4 import BeautifulSoup
 import random
 
@@ -22,7 +26,7 @@ def get_address(eircode):
         return address.replace(eircode,"")
     except:
         return "No Address"
-        
+
 def generate_record(RoutingKey):
     try:
         with open(RoutingKey+".txt") as f:
@@ -39,9 +43,9 @@ def generate_record(RoutingKey):
                         continue
                     else:
                         result = eircode+'\t'+get_address(eircode)+'\n'
-                        print result
+                        print (result)
                         with open(RoutingKey+'.txt','a') as f: f.write(result)
-    print "Done"
+    print ("Done")
 
 #This will create a text file called D6W.txt and then begin to populate it with
 #eircodes and address for the Routing Key D6W. Most importantly, if the code is

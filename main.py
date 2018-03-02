@@ -1,5 +1,10 @@
 #!/usr/bin/env python
-import mechanize
+# -*- coding: utf-8 -*-
+
+# import mechanize
+# mechanize only works with Python 2.4, Python 2.5, Python 2.6, and Python 2.7.
+# alternatives - RoboBrowser, MechanicalSoup
+
 import os
 import threading
 import csv
@@ -8,7 +13,7 @@ import time
 from bs4 import BeautifulSoup
 import unicodedata
 import re
-import urllib2
+import urllib.request
 
 def alive(url="http://correctaddress.anpost.ie/pages/Search.aspx"):
     try:
@@ -43,7 +48,7 @@ def generate_pool(keys=("A41", "A42", "A45", "A63", "A67", "A75", "A81", "A82", 
                     pool_of_unique_identifiers.add(u1+u2+u3+u4)
 
 def RepresentsInt(s):
-    try: 
+    try:
         int(s)
         return True
     except ValueError:
@@ -76,7 +81,7 @@ def check_eircode(eircode):
             return False
         if RepresentsLetter(u1) and RepresentsLetter(u2) and RepresentsLetter(u3) and RepresentsLetter(u4):
             return False
-        return True	
+        return True
     except:
         return False
 
@@ -179,9 +184,9 @@ def load_csv_file(name="eircode"):
     global filename
     filename = name+".csv"
     if not os.path.exists(filename):
-        print "File does not exist. Creating file now."
+        print ("File does not exist. Creating file now.")
         header = '"Eircode","Address"'+"\n"
-        print header
+        print (header)
         with open(filename, 'a') as f:
             f.write(header)
     with open(filename, 'rb') as f:
@@ -206,7 +211,7 @@ def add_to_csv(eircode):
                 address = address+", IRELAND"
                 row= '"'+eircode+'","'+address+'"'+"\n"
                 with open(filename,'a') as f: f.write(row)
-                print "ADDED TO CSV FILE: "+row
+                print ("ADDED TO CSV FILE: "+row_
                 exclude.add(eircode)
                 return True
         except:
@@ -228,7 +233,7 @@ def search_street(address):
             else:
                 last_eircode = eircode
             add_to_csv(eircode)
-       
+
 def search_unique_identifier(eircode):
     routing_key = eircode.split(" ")[0]
     unique_identifer = eircode.split(" ")[1]
@@ -240,16 +245,16 @@ def search_unique_identifier(eircode):
             add_to_csv(eircode)
             search_street(address)
 
-def init():    
+def init():
     generate_pool()
-    print "Loading CSV file and removing previously found Eircodes."
+    print ("Loading CSV file and removing previously found Eircodes.")
     previous = load_csv_file()
-    print "The CSV file contains "+previous+" Eircodes. These have been removed from the search."
+    print ("The CSV file contains "+previous+" Eircodes. These have been removed from the search.")
 
 def search():
     while True:
         while not alive():
-            print "Waiting to reconnect..."
+            print ("Waiting to reconnect...")
         eircode = generate_valid_eircode()
         add_to_csv(eircode)
         search_unique_identifier(eircode)
@@ -258,16 +263,16 @@ def generate_csv(n=15):
     init()
     threads = []
     for x in range(n):
-        print "Loading "+str(x+1)+"/"+str(n)+"."
+        print ("Loading "+str(x+1)+"/"+str(n)+".")
         t = threading.Thread(target=search)
         threads.append(t)
         t.start()
-    print "Searching... please wait."
+    print ("Searching... please wait.")
 
 #-------------------------------------------------------------
 #------------------------# MAIN #----------------------------#
 #-------------------------------------------------------------
-print "Run? (YES/no)"
+print ("Run? (YES/no)")
 yes = set(['yes','y', 'ye', ''])
 choice = raw_input().lower()
 if choice in yes:
