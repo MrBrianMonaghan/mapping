@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 import random
 
 def get_address(eircode):
-    browser = mechanize.Browser(factory=mechanize.RobustFactory())
+#    browser = mechanize.Browser(factory=mechanize.RobustFactory())
     url = "http://correctaddress.anpost.ie/pages/Search.aspx"
     browser.addheaders = [('User-agent', 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.0.6')]
     browser.open(url)
